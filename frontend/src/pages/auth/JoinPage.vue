@@ -1,62 +1,3 @@
-<script setup>
-import { reactive, ref } from 'vue';
-import { useRouter } from 'vue-router';
-import authApi from '@/api/authApi';
-
-const router = useRouter();
-const avatar = ref(null);
-const checkError = ref('');
-
-const member = reactive({
-  // 테스트용 초기화
-  username: 'hong',
-  email: 'hong@gmail.com',
-  password: '12',
-  password2: '12',
-  avatar: null,
-});
-
-const disableSubmit = ref(true);
-// username 중복 체크
-const checkUsername = async () => {
-  if (!member.username) {
-    return alert('사용자 ID를 입력하세요.');
-  }
-
-  disableSubmit.value = await authApi.checkUsername(member.username);
-  console.log(disableSubmit.value, typeof disableSubmit.value);
-  checkError.value = disableSubmit.value
-    ? '이미 사용중인 ID입니다.'
-    : '사용가능한 ID입니다.';
-};
-
-// username 입력 핸들러
-const changeUsername = () => {
-  disableSubmit.value = true; //ID중복 체크를 하지 않았으므로 submit버튼 비활성화
-  if (member.username) {
-    checkError.value = 'ID 중복 체크를 하셔야 합니다.';
-  } else {
-    checkError.value = '';
-  }
-};
-const join = async () => {
-  if (member.password != member.password2) {
-    return alert('비밀번호가 일치하지 않습니다.');
-  }
-
-  if (avatar.value.files.length > 0) {
-    member.avatar = avatar.value.files[0];
-  }
-
-  try {
-    await authApi.create(member); // 회원가입
-    router.push({ name: 'home' }); // 회원 가입 성공 시, 첫 페이지로 이동 또는 로그인 페이지로 이동
-  } catch (e) {
-    console.error(e);
-  }
-};
-</script>
-
 <template>
   <div class="mt-5 mx-auto" style="width: 500px">
     <h1 class="my-5">
@@ -65,6 +6,7 @@ const join = async () => {
     </h1>
 
     <form @submit.prevent="join">
+      <!-- 사용자 ID -->
       <div class="mb-3 mt-3">
         <label for="username" class="form-label">
           <i class="fa-solid fa-user"></i>
@@ -76,9 +18,9 @@ const join = async () => {
           >
             ID 중복 확인
           </button>
-          <span :class="disableSubmit.value ? 'text-primary' : 'text-danger'">{{
-            checkError
-          }}</span>
+          <span :class="disableSubmit ? 'text-danger' : 'text-primary'">
+            {{ checkError }}
+          </span>
         </label>
         <input
           type="text"
@@ -87,8 +29,11 @@ const join = async () => {
           id="username"
           @input="changeUsername"
           v-model="member.username"
+          required
         />
       </div>
+
+      <!-- 아바타 이미지 파일 업로드 -->
       <div>
         <label for="avatar" class="form-label">
           <i class="fa-solid fa-user-astronaut"></i>
@@ -103,6 +48,7 @@ const join = async () => {
         />
       </div>
 
+      <!-- 이메일 -->
       <div class="mb-3 mt-3">
         <label for="email" class="form-label">
           <i class="fa-solid fa-envelope"></i>
@@ -114,8 +60,11 @@ const join = async () => {
           placeholder="Email"
           id="email"
           v-model="member.email"
+          required
         />
       </div>
+
+      <!-- 비밀번호 -->
       <div class="mb-3">
         <label for="password" class="form-label">
           <i class="fa-solid fa-lock"></i> 비밀번호:
@@ -126,10 +75,13 @@ const join = async () => {
           placeholder="비밀번호"
           id="password"
           v-model="member.password"
+          required
         />
       </div>
+
+      <!-- 비밀번호 확인 -->
       <div class="mb-3">
-        <label for="password" class="form-label">
+        <label for="password2" class="form-label">
           <i class="fa-solid fa-lock"></i> 비밀번호 확인:
         </label>
         <input
@@ -138,16 +90,74 @@ const join = async () => {
           placeholder="비밀번호 확인"
           id="password2"
           v-model="member.password2"
+          required
         />
       </div>
+
       <button
         type="submit"
         class="btn btn-primary mt-4"
         :disabled="disableSubmit"
       >
-        <i class="fa-solid fa-user-plus"></i>
-        확인
+        <i class="fa-solid fa-user-plus"></i> 확인
       </button>
     </form>
   </div>
 </template>
+
+<script setup>
+import { reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import authApi from '@/api/authApi';
+
+const router = useRouter();
+const avatar = ref(null);
+const checkError = ref('');
+const disableSubmit = ref(true);
+
+const member = reactive({
+  username: '',
+  email: '',
+  password: '',
+  password2: '',
+  avatar: null,
+});
+
+const checkUsername = async () => {
+  if (!member.username) {
+    return alert('사용자 ID를 입력하세요.');
+  }
+
+  disableSubmit.value = await authApi.checkUsername(member.username);
+  checkError.value = disableSubmit.value
+    ? '이미 사용중인 ID입니다.'
+    : '사용 가능한 ID입니다.';
+};
+
+const changeUsername = () => {
+  disableSubmit.value = true;
+  checkError.value = member.username ? 'ID 중복 체크를 하셔야 합니다.' : '';
+};
+
+const join = async () => {
+  if (member.email.trim() === '') {
+    return alert('이메일을 입력해주세요');
+  }
+
+  if (member.password != member.password2) {
+    return alert('비밀번호가 일치하지 않습니다.');
+  }
+
+  if (avatar.value.files.length > 0) {
+    member.avatar = avatar.value.files[0];
+  }
+
+  try {
+    await authApi.create(member);
+    alert('가입 성공!');
+    router.push({ name: 'login' });
+  } catch (e) {
+    console.error(e);
+  }
+};
+</script>

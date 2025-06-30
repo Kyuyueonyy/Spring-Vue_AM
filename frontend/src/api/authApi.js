@@ -1,9 +1,10 @@
+//인증 관련된 api호출
 import api from 'axios';
 const BASE_URL = '/api/member';
 const headers = { 'Content-Type': 'multipart/form-data' };
 export default {
   // username 중복 체크, true: 중복(사용불가),  false: 사용 가능
-  async checkUsername(username) { 
+  async checkUsername(username) {
     const { data } = await api.get(`${BASE_URL}/checkusername/${username}`);
     console.log('AUTH GET CHECKUSERNAME', data);
     return data;

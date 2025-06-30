@@ -10,7 +10,7 @@ const router = createRouter({
       name: 'home',
       component: HomePage,
     },
-    ...authRouters,
+    ...authRouters, //인증 관련 라우트 추가
   ],
 });
 
