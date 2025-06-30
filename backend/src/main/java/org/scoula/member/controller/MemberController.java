@@ -8,12 +8,13 @@ import org.scoula.member.service.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-//backend 보통 json/text로 vue로 리턴함
+//backend 보통 json/text로 vue로 리턴함.
 @Log4j2
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/member")
 public class MemberController {
+
     final MemberService service;
 
     @GetMapping("/checkusername/{username}")
@@ -25,4 +26,5 @@ public class MemberController {
     public ResponseEntity<MemberDTO> join(MemberJoinDTO member) {
         return ResponseEntity.ok(service.join(member));
     }
+
 }

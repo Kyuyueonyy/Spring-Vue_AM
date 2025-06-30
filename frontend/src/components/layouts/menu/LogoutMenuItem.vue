@@ -2,9 +2,9 @@
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-
 const logout = (e) => {
-  // 실제 로그아웃 로직 구현 예정
+  // 로그아웃
+
   router.push('/');
 };
 </script>

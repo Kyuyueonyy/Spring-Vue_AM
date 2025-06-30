@@ -24,8 +24,10 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private AuthResultDTO makeAuthResult(CustomUser user) {
 
-        //JsonResponse로 보낼 값들 만들어야함
-        //성공했으므로 Authentication객체가 이미 만들어져서 SecurityContextHolder에 들어가있음
+        //JsonResponse로 보낼 값들 만ㄷ르어야함.
+        //성공했으므로  Authentication객체가 이미 만들어져서
+        //SecuriyContextHolder에 들어가 있음.
+
         String username = user.getUsername();
         // 토큰 생성
         String token = jwtProcessor.generateToken(username);
@@ -38,8 +40,10 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
                                         Authentication authentication) throws IOException, ServletException {
         // 인증 결과 Principal
         CustomUser user = (CustomUser) authentication.getPrincipal();
+
         // 인증 성공 결과를 JSON으로 직접 응답
         AuthResultDTO result = makeAuthResult(user);
         JsonResponse.send(response, result);
     }
 }
+

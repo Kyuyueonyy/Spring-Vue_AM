@@ -11,8 +11,8 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class MemberDTO {
     private String username;
@@ -21,12 +21,11 @@ public class MemberDTO {
     private Date updateDate;
 
     private MultipartFile avatar;
+    private List<String> authList;
 
-    private List<String> authList; //권한 목록, join처리 필요
+    //dto --> vo
 
-    //dto -> vo
-    //vo -> dto
-
+    //vo --> dto
     public static MemberDTO of(MemberVO m) {
         return MemberDTO.builder()
                 .username(m.getUsername())
