@@ -3,28 +3,35 @@ import { computed, reactive, ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
 import authApi from '@/api/authApi';
+
 const router = useRouter();
 const auth = useAuthStore();
+
 const changePassword = reactive({
   username: auth.username,
   oldPassword: '',
   newPassword: '',
   newPassword2: '',
 });
+
 const disableSubmit = computed(
   () =>
     !changePassword.oldPassword ||
     !changePassword.newPassword ||
     !changePassword.newPassword2
 );
+
 const error = ref('');
 const inputPassword = () => (error.value = '');
+
 const resetError = () => (error.value = '');
+
 const onSubmit = async () => {
   if (changePassword.newPassword != changePassword.newPassword2) {
     error.value = '새 비밀번호가 일치하지 않습니다.';
     return;
   }
+
   try {
     await authApi.changePassword(changePassword);
     alert('비밀번호를 수정했습니다.');
@@ -40,6 +47,7 @@ const onSubmit = async () => {
       <i class="fa-solid fa-lock"></i>
       비밀번호 변경
     </h1>
+
     <form @submit.prevent="onSubmit">
       <div class="mb-3">
         <label for="password" class="form-label">
@@ -54,6 +62,7 @@ const onSubmit = async () => {
           @input="inputPassword"
         />
       </div>
+
       <div class="mb-3">
         <label for="password" class="form-label">
           <i class="fa-solid fa-lock"></i>
@@ -67,6 +76,7 @@ const onSubmit = async () => {
           @input="resetError"
         />
       </div>
+
       <div class="mb-3">
         <label for="password" class="form-label">
           <i class="fa-solid fa-lock"></i>
@@ -81,6 +91,7 @@ const onSubmit = async () => {
         />
       </div>
       <div v-if="error" class="text-danger">{{ error }}</div>
+
       <button
         type="submit"
         class="btn btn-primary mt-4"

@@ -53,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    // 문자셋필터
+    //문자셋필터
     // post방식의 전달시 body에 들어있는 값 한글 인코딩 필터
     public CharacterEncodingFilter encodingFilter() {
         CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
@@ -103,10 +103,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .addFilterBefore(jwtUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         http
-                .addFilterBefore(encodingFilter(), CsrfFilter.class)  // 문자 인코딩 필터
-                .addFilterBefore(jwtUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // ③ JWT 로그인 처리
-                .addFilterBefore(jwtAuthenticationFilter, JwtUsernamePasswordAuthenticationFilter.class)              // ② 요청의 헤더에서 토큰 검사
-                .addFilterBefore(authenticationErrorFilter, JwtAuthenticationFilter.class);                           // ① 만료된 토큰 예외 처리
+                .addFilterBefore(encodingFilter(), CsrfFilter.class) // 가장 먼저
+                .addFilterBefore(jwtUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, JwtUsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(authenticationErrorFilter, JwtAuthenticationFilter.class);
+        // ① 만료된 토큰 예외 처리
 
 
         http.httpBasic().disable() // 기본 HTTP 인증비활성화
@@ -122,9 +123,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
-                // 일단 모든 접근
-                .antMatchers(HttpMethod.POST, "/api/member").authenticated()
                 .antMatchers(HttpMethod.PUT, "/api/member", "/api/member/*/changepassword").authenticated()
+                .antMatchers(HttpMethod.POST, "/api/board/**").authenticated()
+                .antMatchers(HttpMethod.PUT, "/api/board/**").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/api/board/**").authenticated()
+                // 일단 모든 접근 허용
                 .anyRequest().permitAll();
 
         // 경로별 접근권한설정

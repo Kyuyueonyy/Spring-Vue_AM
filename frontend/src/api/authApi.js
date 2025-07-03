@@ -1,5 +1,5 @@
 // import api from 'axios';
-import api from '@/api'; //index.js가 import됨
+import api from '@/api'; //index.js가 import
 
 const BASE_URL = '/api/member';
 const headers = { 'Content-Type': 'multipart/form-data' };
@@ -48,10 +48,13 @@ export default {
     console.log('AUTH PUT: ', data);
     return data;
   },
-
   async changePassword(formData) {
-    const { data } = await api.put(`${BASE_URL}/${formData.username}/changepassword`, formData);
+    const { data } = await api.put(
+      `${BASE_URL}/${formData.username}/changepassword`,
+      formData
+    );
     console.log('AUTH PUT: ', data);
+
     return data;
   },
 };

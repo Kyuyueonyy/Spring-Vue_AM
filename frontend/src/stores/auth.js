@@ -21,11 +21,11 @@ export const useAuthStore = defineStore('auth', () => {
   const email = computed(() => state.value.user.email); // 로그인 사용자 email
 
   const login = async (member) => {
-    state.value.token = 'test token';
-    state.value.user = {
-      username: member.username,
-      email: member.username + '@test.com',
-    };
+    // state.value.token = 'test token';
+    // state.value.user = {
+    //   username: member.username,
+    //   email: member.username + '@test.com',
+    // };
 
     // api 호출
     const { data } = await axios.post('/api/auth/login', member);
@@ -63,9 +63,9 @@ export const useAuthStore = defineStore('auth', () => {
     username,
     email,
     isLogin,
+    changeProfile,
     login,
     logout,
     getToken,
-    changeProfile,
   };
 });

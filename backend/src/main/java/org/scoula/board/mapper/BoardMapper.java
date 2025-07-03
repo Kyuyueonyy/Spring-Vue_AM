@@ -1,30 +1,34 @@
 package org.scoula.board.mapper;
 
-import org.apache.ibatis.annotations.Select;
 import org.scoula.board.domain.BoardAttachmentVO;
 import org.scoula.board.domain.BoardVO;
+import org.scoula.common.pagination.PageRequest;
 
 import java.util.List;
 
 public interface BoardMapper {
-//    @Select("select * from tbl_board order by no desc")
-    public List<BoardVO> getList();
+    int getTotalCount();
 
-    public BoardVO get(Long no);
+    List<BoardVO> getPage(PageRequest pageRequest);
 
-    public void create(BoardVO board);
+    //    @Select("select * from tbl_board order by no desc")
+    List<BoardVO> getList();
 
-    public int update(BoardVO board);
+    BoardVO get(Long no);
 
-    public int delete(Long no);
+    void create(BoardVO board);
+
+    int update(BoardVO board);
+
+    int delete(Long no);
 
     // 첨부 파일 처리
-    public void createAttachment(BoardAttachmentVO attach);
+    void createAttachment(BoardAttachmentVO attach);
 
-    public List<BoardAttachmentVO> getAttachmentList(Long bno);
+    List<BoardAttachmentVO> getAttachmentList(Long bno);
 
-    public BoardAttachmentVO getAttachment(Long no);
+    BoardAttachmentVO getAttachment(Long no);
 
-    public int deleteAttachment(Long no);
+    int deleteAttachment(Long no);
 
 }

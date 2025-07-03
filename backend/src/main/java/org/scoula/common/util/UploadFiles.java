@@ -52,13 +52,14 @@ public class UploadFiles {
         }
     }
 
-    //이미지 다운로드 메소드
     public static void downloadImage(HttpServletResponse response, File file) {
         try {
             Path path = Path.of(file.getPath());
             String mimeType = Files.probeContentType(path);
+
             response.setContentType(mimeType);
             response.setContentLength((int) file.length());
+
             try (OutputStream os = response.getOutputStream();
                  BufferedOutputStream bos = new BufferedOutputStream(os)) {
                 Files.copy(path, bos);
@@ -67,5 +68,6 @@ public class UploadFiles {
             throw new RuntimeException(e);
         }
     }
+
 
 }

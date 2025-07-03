@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class MemberUpdateDTO {
 
     MultipartFile avatar;
+
     private String username;
     private String password;
     private String email;

@@ -4,12 +4,14 @@ import { computed, reactive, ref } from 'vue';
 // 인증 관련 상태를 관리하는 Pinia 스토어 가져오기
 import { useAuthStore } from '@/stores/auth';
 // 라우팅 기능을 사용하기 위해 Vue Router의 useRouter 훅 가져오기
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 // router 인스턴스를 생성하여 페이지 이동 등에 사용
 const router = useRouter();
 // 인증 관련 Pinia 스토어 인스턴스를 생성하여 상태나 액션에 접근
 const auth = useAuthStore();
+
+const cr = useRoute();
 
 // 사용자 입력 값을 담을 반응형 객체 생성
 const member = reactive({
@@ -25,16 +27,17 @@ const error = ref('');
 const disableSubmit = computed(() => !(member.username && member.password));
 
 const login = async () => {
-  console.log(member);
   try {
-    await auth.login(member);
-    router.push('/');
+ await auth.login(member);
+    if (cr.query.next) {  // 로그인 후 이동할  페이지가 있는 경우
+      router.push({ name: cr.query.next });
+    } else { // 일반 로그인
+      router.push('/');
+    }
   } catch (e) {
-    // 로그인 에러
-    console.log('에러=======', e);
     error.value = e.response.data;
   }
-};
+ };
 </script>
 
 <template>
